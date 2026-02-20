@@ -433,12 +433,28 @@
         .slide:not([data-slide="0"]) h2 {
             font-size: clamp(2.5rem, 5.2vw, 4.2rem);
             letter-spacing: -0.025em;
-            background: linear-gradient(135deg, #0F0F0F 30%, #B89E5F 70%);
+            background: linear-gradient(135deg, #0F0F0F 20%, #B89E5F 40%, #ffffff 50%, #B89E5F 60%, #0F0F0F 80%);
+            background-size: 300% 300%;
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
             text-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
             line-height: 1.0;
+            animation: liquid-mesh 12s ease infinite alternate;
+        }
+
+        @keyframes liquid-mesh {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
         }
 
 
