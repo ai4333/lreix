@@ -1,0 +1,1700 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LREIX | Premium Pitch Deck</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,600;1,6..96,400&family=Inter:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,500;1,400&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+    <script
+        type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
+    <script>
+        tailwind.config = { theme: { extend: { colors: { 'alabaster': '#F0F0EB', 'obsidian': '#0F0F0F', 'burnished-gold': '#B89E5F', 'soft-gray': '#A0A09C' }, fontFamily: { serif: ['"Bodoni Moda"', 'serif'], sans: ['"Inter"', 'sans-serif'], display: ['"Cormorant Garamond"', 'serif'] }, backgroundImage: { 'noise': "url('data:image/svg+xml,%3Csvg viewBox=\"0 0 200 200\" xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cfilter id=\"n\"%3E%3CfeTurbulence type=\"fractalNoise\" baseFrequency=\"0.8\" numOctaves=\"3\" stitchTiles=\"stitch\"/%3E%3C/filter%3E%3Crect width=\"100%25\" height=\"100%25\" filter=\"url(%23n)\" opacity=\"0.06\"/%3E%3C/svg%3E')" } } } }
+    </script>
+    <style>
+        /* Reset & Base */
+        body {
+            background: #F0F0EB;
+            color: #0F0F0F;
+            overflow: hidden;
+            cursor: none;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .noise-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 5;
+            pointer-events: none;
+            opacity: 0.6;
+            mix-blend-mode: overlay;
+        }
+
+        /* Custom Cursor */
+        .cursor-dot,
+        .cursor-circle {
+            position: fixed;
+            top: 0;
+            left: 0;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        .cursor-dot {
+            width: 8px;
+            height: 8px;
+            background: #0F0F0F;
+        }
+
+        .cursor-circle {
+            width: 40px;
+            height: 40px;
+            border: 1px solid rgba(15, 15, 15, 0.4);
+            transition: width 0.3s, height 0.3s, background 0.3s;
+        }
+
+        .cursor-circle.hovered {
+            width: 70px;
+            height: 70px;
+            background: rgba(184, 158, 95, 0.08);
+            border-color: #B89E5F;
+            backdrop-filter: blur(2px);
+        }
+
+        /* Pitch Deck Architectural Framing */
+        .deck-frame {
+            position: fixed;
+            inset: 2rem;
+            border: 1px solid rgba(15, 15, 15, 0.08);
+            pointer-events: none;
+            z-index: 40;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .deck-frame::before {
+            content: '';
+            position: absolute;
+            top: -1px;
+            left: 10%;
+            right: 10%;
+            height: 1px;
+            background: #F0F0EB;
+        }
+
+        .deck-frame::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 10%;
+            right: 10%;
+            height: 1px;
+            background: #F0F0EB;
+        }
+
+        .frame-corner {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            border: 1px solid rgba(15, 15, 15, 0.3);
+        }
+
+        .fc-tl {
+            top: -3px;
+            left: -3px;
+        }
+
+        .fc-tr {
+            top: -3px;
+            right: -3px;
+        }
+
+        .fc-bl {
+            bottom: -3px;
+            left: -3px;
+        }
+
+        .fc-br {
+            bottom: -3px;
+            right: -3px;
+        }
+
+        .frame-footer {
+            display: flex;
+            justify-content: space-between;
+            padding: 1.5rem 2rem 0;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.55rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: rgba(15, 15, 15, 0.3);
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            border-top: 1px solid rgba(15, 15, 15, 0.08);
+        }
+
+        /* Deck Structure */
+        .deck {
+            width: 100vw;
+            height: 100vh;
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory;
+            scrollbar-width: none;
+        }
+
+        .deck::-webkit-scrollbar {
+            display: none;
+        }
+
+        .slide {
+            width: 100vw;
+            height: 100vh;
+            min-height: 100vh;
+            scroll-snap-align: start;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            padding: 4rem;
+        }
+
+        /* 3D Backgrounds */
+        #hero-canvas {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .ambient-bg {
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.7) 0%, rgba(240, 240, 235, 0) 60%);
+            z-index: 0;
+            animation: breathe 10s ease-in-out infinite;
+        }
+
+        @keyframes breathe {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 0.5;
+            }
+
+            50% {
+                transform: scale(1.1);
+                opacity: 0.8;
+            }
+        }
+
+        .float-shape {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0.3;
+            animation: floatShape 12s ease-in-out infinite;
+        }
+
+        .fs1 {
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(184, 158, 95, 0.05), transparent);
+            top: -10%;
+            right: -5%;
+            animation-delay: 0s;
+        }
+
+        .fs2 {
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, rgba(184, 158, 95, 0.1), rgba(255, 255, 255, 0.05), transparent);
+            bottom: -5%;
+            left: -10%;
+            animation-delay: 3s;
+            filter: blur(60px);
+        }
+
+        .liquid-orb {
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(184, 158, 95, 0.15), rgba(255, 255, 255, 0.1), transparent);
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: 0;
+            pointer-events: none;
+            animation: orb-float 20s ease-in-out infinite;
+        }
+
+        @keyframes orb-float {
+
+            0%,
+            100% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            33% {
+                transform: translate(100px, -100px) scale(1.1);
+            }
+
+            66% {
+                transform: translate(-50px, 50px) scale(0.9);
+            }
+        }
+
+        @keyframes floatShape {
+
+            0%,
+            100% {
+                transform: translateY(0) scale(1);
+            }
+
+            50% {
+                transform: translateY(-20px) scale(1.05);
+            }
+        }
+
+        /* Slide Layout Grid for Pitch */
+        .slide-layout {
+            position: relative;
+            z-index: 20;
+            width: 100%;
+            max-width: 1000px;
+            height: 100%;
+            max-height: 600px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            margin-top: 10vh;
+        }
+
+        .slide-header {
+            flex-shrink: 0;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid rgba(15, 15, 15, 0.08);
+            padding-bottom: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            animation: slideDown 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+            opacity: 0;
+        }
+
+        .slide-body {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            animation: slideUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+            opacity: 0;
+            animation-delay: 0.2s;
+        }
+
+        /* Typography */
+        .label {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.85rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: #B89E5F;
+            font-style: italic;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        h1 {
+            font-family: 'Bodoni Moda', serif;
+            font-weight: 600;
+            font-size: clamp(3rem, 6vw, 5rem);
+            letter-spacing: -0.02em;
+            line-height: 1.05;
+        }
+
+        h2 {
+            font-family: 'Bodoni Moda', serif;
+            font-weight: 600;
+            font-size: clamp(1.8rem, 3.5vw, 2.5rem);
+            line-height: 1.1;
+            letter-spacing: -0.01em;
+            color: #0F0F0F;
+        }
+
+        h3 {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.05rem;
+            font-weight: 500;
+            line-height: 1.4;
+            color: #0F0F0F;
+        }
+
+        .subtitle {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.1rem, 1.8vw, 1.4rem);
+            font-weight: 300;
+            color: #A0A09C;
+            line-height: 1.5;
+            font-style: italic;
+        }
+
+        .gold-text {
+            color: #B89E5F;
+        }
+
+        .grad-text {
+            background: linear-gradient(135deg, #B89E5F, #D4AF37);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        :root {
+            --glass-tint: linear-gradient(135deg, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0.22));
+            --glass-edge: rgba(255, 255, 255, 0.6);
+            --glass-shadow: 0 35px 70px rgba(0, 0, 0, 0.08);
+            --glass-sheen: radial-gradient(circle at 20% 10%, rgba(255, 255, 255, 0.75), transparent 55%);
+        }
+
+        .slide:not([data-slide="0"]) .slide-layout {
+            position: relative;
+            isolation: isolate;
+        }
+
+        .slide:not([data-slide="0"]) .slide-layout::before {
+            content: '';
+            position: absolute;
+            inset: -1.25rem;
+            background: var(--glass-tint);
+            border: 1px solid var(--glass-edge);
+            border-radius: 40px 15px 35px 20px;
+            box-shadow: var(--glass-shadow);
+            backdrop-filter: blur(28px) saturate(180%);
+            opacity: 0.98;
+            z-index: -1;
+            filter: url(#liquid-filter);
+        }
+
+        .slide:not([data-slide="0"]) .slide-layout::after {
+            content: '';
+            position: absolute;
+            inset: -1.25rem;
+            border-radius: 40px 15px 35px 20px;
+            background: var(--glass-sheen);
+            opacity: 0.4;
+            mix-blend-mode: screen;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .slide:not([data-slide="0"]) .slide-header,
+        .slide:not([data-slide="0"]) .slide-body {
+            position: relative;
+            z-index: 1;
+        }
+
+        .slide:not([data-slide="0"]) .slide-header::before,
+        .slide:not([data-slide="0"]) .slide-body::before {
+            content: '';
+            position: absolute;
+            inset: -1rem;
+            border-radius: 16px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.28));
+            border: 1px solid rgba(255, 255, 255, 0.65);
+            box-shadow: 0 18px 40px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(26px) saturate(180%);
+            opacity: 0.9;
+            z-index: -1;
+        }
+
+        .slide:not([data-slide="0"]) .slide-header::after,
+        .slide:not([data-slide="0"]) .slide-body::after {
+            content: '';
+            position: absolute;
+            inset: -1rem;
+            border-radius: 16px;
+            background: radial-gradient(circle at 15% 15%, rgba(255, 255, 255, 0.8), transparent 55%);
+            opacity: 0.55;
+            mix-blend-mode: screen;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .slide:not([data-slide="0"]) h2 {
+            font-size: clamp(2.5rem, 5.2vw, 4.2rem);
+            letter-spacing: -0.025em;
+            background: linear-gradient(135deg, #0F0F0F 20%, #B89E5F 40%, #ffffff 50%, #B89E5F 60%, #0F0F0F 80%);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow:
+                0 10px 30px rgba(0, 0, 0, 0.1),
+                0 0 20px rgba(184, 158, 95, 0.2);
+            filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+            line-height: 1.0;
+            animation: liquid-mesh 15s ease infinite alternate;
+        }
+
+        @keyframes liquid-mesh {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        @keyframes specular-sweep {
+            0% {
+                transform: translateX(-200%) skewX(-30deg);
+                opacity: 0;
+            }
+
+            20% {
+                opacity: 0.5;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+
+            80% {
+                opacity: 0.5;
+            }
+
+            100% {
+                transform: translateX(200%) skewX(-30deg);
+                opacity: 0;
+            }
+        }
+
+        .slide:not([data-slide="0"]) h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+            color: #0F0F0F;
+            text-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            background: linear-gradient(135deg, #0F0F0F, #333);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .slide:not([data-slide="0"]) .label {
+            font-size: 1.1rem;
+            letter-spacing: 0.3em;
+            margin-bottom: 1rem;
+            color: #B89E5F;
+            text-shadow: 0 0 10px rgba(184, 158, 95, 0.1);
+        }
+
+        .slide:not([data-slide="0"]) .subtitle {
+            font-size: clamp(1.5rem, 2.8vw, 2.1rem);
+            color: #555550;
+            font-weight: 300;
+            margin-top: 0.8rem;
+        }
+
+        /* Grid & Cards */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.2rem;
+        }
+
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(15, 15, 15, 0.06);
+            border-radius: 8px;
+            padding: 1.8rem;
+            text-align: left;
+            transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+        }
+
+        .slide:not([data-slide="0"]) .card {
+            background-color: rgba(255, 255, 255, 0.45);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            border-radius: 24px 8px 24px 8px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.08), inset 0 1px 1px rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(22px) rotate(0.1deg);
+            position: relative;
+            overflow: hidden;
+            filter: url(#liquid-filter);
+        }
+
+        .slide:not([data-slide="0"]) .card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.5), transparent);
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .card:hover {
+            background: rgba(255, 255, 255, 0.9);
+            border-color: rgba(184, 158, 95, 0.25);
+            transform: translateY(-3px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+        }
+
+        .card-accent {
+            border-color: rgba(184, 158, 95, 0.2);
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.8), rgba(250, 248, 245, 0.6));
+            position: relative;
+            overflow: hidden;
+        }
+
+        .slide:not([data-slide="0"]) .card-accent {
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.85), rgba(248, 246, 241, 0.55));
+        }
+
+        .card-accent::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #B89E5F, #D4AF37);
+        }
+
+        .nbadge {
+            width: 32px;
+            height: 32px;
+            border-radius: 4px;
+            background: rgba(184, 158, 95, 0.06);
+            border: 1px solid rgba(184, 158, 95, 0.15);
+            color: #B89E5F;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Bodoni Moda', serif;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.35rem 0.9rem;
+            border-radius: 100px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.65rem;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            border: 1px solid rgba(184, 158, 95, 0.25);
+            color: #B89E5F;
+            background: rgba(184, 158, 95, 0.06);
+        }
+
+        .slide:not([data-slide="0"]) .chip {
+            font-size: 0.75rem;
+        }
+
+        .chip-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #B89E5F;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .bullet {
+            list-style: none;
+            padding: 0;
+        }
+
+        .bullet li {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            padding: 0.5rem 0;
+            color: #707070;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .slide:not([data-slide="0"]) .bullet li {
+            font-size: 1.2rem;
+            color: #3d3d3d;
+            font-weight: 500;
+        }
+
+        .bullet li::before {
+            content: '';
+            width: 4px;
+            height: 4px;
+            background: #B89E5F;
+            margin-top: 0.6rem;
+            flex-shrink: 0;
+            transform: rotate(45deg);
+        }
+
+        .clean-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .clean-table th {
+            text-align: left;
+            padding: 1rem;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.8rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: #A0A09C;
+            border-bottom: 1px solid rgba(15, 15, 15, 0.1);
+            font-style: italic;
+        }
+
+        .clean-table td {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(15, 15, 15, 0.06);
+            font-size: 0.95rem;
+            color: #404040;
+        }
+
+        .slide:not([data-slide="0"]) .clean-table th {
+            font-size: 1.05rem;
+            padding: 1.5rem;
+        }
+
+        .slide:not([data-slide="0"]) .clean-table td {
+            font-size: 1.2rem;
+            padding: 1.5rem;
+            color: #2d2d2d;
+        }
+
+        .clean-table .hl {
+            background: rgba(184, 158, 95, 0.03);
+        }
+
+        .pipeline {
+            display: flex;
+            align-items: center;
+        }
+
+        .pnode {
+            flex: 1;
+            padding: 0.8rem 0.5rem;
+            text-align: center;
+            border: 1px solid rgba(15, 15, 15, 0.08);
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.7);
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: #404040;
+        }
+
+        .slide:not([data-slide="0"]) .pnode {
+            font-size: 0.85rem;
+        }
+
+        .pnode.core {
+            border-color: rgba(184, 158, 95, 0.3);
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 4px 15px rgba(184, 158, 95, 0.05);
+        }
+
+        .parr {
+            flex-shrink: 0;
+            width: 24px;
+            text-align: center;
+            color: #A0A09C;
+            font-size: 0.8rem;
+        }
+
+        .plab {
+            display: block;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.55rem;
+            color: #A0A09C;
+            margin-bottom: 0.3rem;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            font-style: italic;
+        }
+
+        .progress-track {
+            width: 100%;
+            height: 2px;
+            background: rgba(15, 15, 15, 0.06);
+            margin-top: 1rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #B89E5F, #D4AF37);
+        }
+
+        /* Nav Dots */
+        .nav-dots {
+            position: fixed;
+            right: 2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            z-index: 100;
+        }
+
+        .nav-dot {
+            width: 4px;
+            height: 16px;
+            background: rgba(15, 15, 15, 0.1);
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            padding: 0;
+        }
+
+        .nav-dot.active {
+            background: #B89E5F;
+            height: 24px;
+            box-shadow: 0 0 8px rgba(184, 158, 95, 0.2);
+        }
+
+        /* Animations */
+        @keyframes slideDown {
+            0% {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideUp {
+            0% {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .slide.active .slide-header {
+            animation: slideDown 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        }
+
+        .slide.active .slide-body {
+            animation: slideUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+            animation-delay: 0.2s;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 1024px) {
+            .deck-frame {
+                inset: 1rem;
+            }
+
+            .grid-4 {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .pipeline {
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+
+            .parr {
+                display: none;
+            }
+
+            .pnode {
+                min-width: calc(50% - 0.5rem);
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                cursor: auto;
+            }
+
+            .cursor-dot,
+            .cursor-circle {
+                display: none;
+            }
+
+            .deck-frame {
+                display: none;
+            }
+
+            .slide {
+                padding: 2rem;
+            }
+
+            .slide-layout {
+                margin-top: 5vh;
+                max-height: none;
+            }
+
+            .grid-2,
+            .grid-3,
+            .grid-4 {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-dots {
+                display: none;
+            }
+
+            .card {
+                padding: 1.2rem;
+            }
+
+            .slide:not([data-slide="0"]) .slide-layout::before,
+            .slide:not([data-slide="0"]) .slide-layout::after {
+                inset: -0.6rem;
+                border-radius: 16px;
+            }
+
+            .slide:not([data-slide="0"]) .slide-header::before,
+            .slide:not([data-slide="0"]) .slide-body::before,
+            .slide:not([data-slide="0"]) .slide-header::after,
+            .slide:not([data-slide="0"]) .slide-body::after {
+                inset: -0.6rem;
+                border-radius: 12px;
+            }
+        }
+
+        .slide:not([data-slide="0"]) p[style*="font-size:0.7rem"],
+        .slide:not([data-slide="0"]) p[style*="font-size:0.75rem"],
+        .slide:not([data-slide="0"]) p[style*="font-size:0.8rem"],
+        .slide:not([data-slide="0"]) p[style*="font-size:0.85rem"] {
+            font-size: 1.15rem !important;
+            line-height: 1.6 !important;
+        }
+
+        .slide:not([data-slide="0"]) .nbadge {
+            width: 42px;
+            height: 42px;
+            font-size: 1.1rem;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="noise-overlay bg-noise"></div>
+    <div class="cursor-dot"></div>
+    <div class="cursor-circle"></div>
+
+    <!-- Pitch Deck Frame (Visible on Desktop) -->
+    <div class="deck-frame hide-mobile">
+        <div class="frame-corner fc-tl"></div>
+        <div class="frame-corner fc-tr"></div>
+        <div class="frame-corner fc-bl"></div>
+        <div class="frame-corner fc-br"></div>
+        <div class="frame-footer">
+            <span>LREIX Infratech · Pitch Deck</span>
+            <span id="slide-indicator">01 / 14</span>
+        </div>
+    </div>
+
+    <nav class="nav-dots" id="navDots"></nav>
+
+    <div class="deck" id="deck">
+
+        <!-- 01 HERO -->
+        <section class="slide active" data-slide="0">
+            <div class="ambient-bg"></div>
+            <canvas id="hero-canvas"></canvas>
+            <div class="slide-layout"
+                style="align-items: center; text-align: center; justify-content: center; height: 100%; margin-top: 0;">
+                <div class="chip" style="margin-bottom: 3rem;"><span class="chip-dot"></span>Confidential</div>
+                <div class="flex justify-between items-center w-full px-[5%] md:px-[15%] opacity-90 mb-8">
+                    <h1 class="font-serif text-[10vw] leading-none tracking-tighter text-obsidian/80 mix-blend-overlay">
+                        LR</h1>
+                    <h1 class="font-serif text-[10vw] leading-none tracking-tighter text-obsidian/80 mix-blend-overlay">
+                        EIX</h1>
+                </div>
+                <p class="font-display italic text-2xl text-obsidian/60 tracking-wider mb-2">Land Risk Intelligence
+                    Infrastructure</p>
+                <p
+                    class="font-sans text-[11px] uppercase tracking-[0.3em] text-soft-gray mt-6 border-t border-obsidian/10 pt-6">
+                    Institutional Grade Evaluation</p>
+            </div>
+        </section>
+
+        <!-- 02 PROBLEM -->
+        <section class="slide" data-slide="1">
+            <div class="liquid-orb"></div>
+            <div class="float-shape fs1"></div>
+            <div class="slide-layout">
+                <div class="slide-header">
+                    <div class="label">01 // The Problem</div>
+                    <h2>Land is digitized. <span style="color:#A0A09C;">It is not risk-intelligent.</span></h2>
+                </div>
+                <div class="slide-body">
+                    <div class="grid-2">
+                        <div style="display:flex; flex-direction:column; gap:1rem;">
+                            <div class="card" style="border-left: 3px solid #ef4444;">
+                                <h3>Visibility ≠ Enforceability</h3>
+                                <p style="font-size:0.85rem; color:#707070; margin-top:0.3rem;">Government portals show
+                                    raw records, not structural enforceability.</p>
+                            </div>
+                            <div class="card" style="border-left: 3px solid #ef4444;">
+                                <h3>Latent Risk</h3>
+                                <p style="font-size:0.85rem; color:#707070; margin-top:0.3rem;">Authority cancellations
+                                    (BDA/KIADB) routinely happen years post-registration.</p>
+                            </div>
+                        </div>
+                        <div class="card"
+                            style="display:flex; flex-direction:column; justify-content:center; background:rgba(239, 68, 68, 0.03); border:1px solid rgba(239, 68, 68, 0.1);">
+                            <h3 style="margin-bottom:1rem; font-size:1.15rem;">No standardized survivability scoring
+                                exists.</h3>
+                            <p
+                                style="font-family:'Inter', sans-serif; font-size:0.8rem; color:#ef4444; margin-bottom:1rem; font-weight:500;">
+                                Collateral collapses → NPAs → Litigation</p>
+                            <div class="divider" style="background:rgba(239, 68, 68, 0.1); margin-bottom:1rem;"></div>
+                            <p
+                                style="color:#ef4444; font-size:0.9rem; font-style:italic; font-family:'Cormorant Garamond', serif;">
+                                Billions in capital deployed on incomplete risk visibility.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 03 WHY NOW -->
+        <section class="slide" data-slide="2">
+            <div class="liquid-orb"></div>
+            <div class="float-shape fs2"></div>
+            <div class="slide-layout">
+                <div class="slide-header">
+                    <div class="label">02 // Market Timing</div>
+                    <h2>The Convergence of Data & Demand</h2>
+                </div>
+                <div class="slide-body">
+                    <div class="grid-3" style="margin-bottom: 2rem;">
+                        <div class="card">
+                            <div class="nbadge">01</div>
+                            <h3>Rapid Digitization</h3>
+                            <p style="font-size:0.8rem; color:#707070; margin-top:0.4rem;">Land records — Bhoomi,
+                                e-Khata formatting</p>
+                        </div>
+                        <div class="card">
+                            <div class="nbadge">02</div>
+                            <h3>Alternative Assets</h3>
+                            <p style="font-size:0.8rem; color:#707070; margin-top:0.4rem;">Rise of fractional &
+                                tokenized land platforms</p>
+                        </div>
+                        <div class="card">
+                            <div class="nbadge" style="background:rgba(184,158,95,0.15)">03</div>
+                            <h3>Institutional Shift</h3>
+                            <p style="font-size:0.8rem; color:#707070; margin-top:0.4rem;">Increasing exposure to
+                                land-backed structured credit</p>
+                        </div>
+                    </div>
+                    <div class="card card-accent" style="text-align:center; padding: 2rem;">
+                        <span style="font-size:1.2rem; color:#404040;">Digitization increased record visibility —</span>
+                        <span style="font-size:1.2rem; margin: 0 1rem; color:#A0A09C;">→</span>
+                        <span class="grad-text" style="font-size:1.2rem; font-weight:600;">But it did not create
+                            predictability.</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 04 INSIGHT -->
+        <section class="slide" data-slide="3">
+            <div class="liquid-orb"></div>
+            <div class="float-shape fs1"></div>
+            <div class="slide-layout">
+                <div class="slide-header">
+                    <div class="label">03 // The Insight</div>
+                    <h2>Redefining Title Validity</h2>
+                </div>
+                <div class="slide-body">
+                    <div
+                        style="display:flex; align-items:center; justify-content:center; gap:2rem; margin-bottom:3rem; padding: 2rem; background:rgba(255,255,255,0.4); border-radius:8px; border:1px solid rgba(15,15,15,0.05);">
+                        <span style="font-family:'Bodoni Moda', serif; font-size:1.8rem; color:#707070;">Title
+                            validity</span>
+                        <span style="font-family:'Bodoni Moda', serif; font-size:2.5rem; color:#ef4444;">≠</span>
+                        <span class="grad-text"
+                            style="font-family:'Bodoni Moda', serif; font-size:1.8rem; font-weight:600;">Authority
+                            survivability</span>
+                    </div>
+                    <div class="grid-2">
+                        <div class="card">
+                            <h3 style="margin-bottom:1rem; color:#404040;">The illusion of safety:</h3>
+                            <ul class="bullet">
+                                <li>Parcel is fully registered</li>
+                                <li>Tax compliant and active</li>
+                                <li>Digitally visible on state portals</li>
+                            </ul>
+                            <p style="margin-top:1.5rem; font-weight:600; color:#ef4444; font-size:0.95rem;">…yet
+                                simultaneously liable to cancellation by overarching authorities.</p>
+                        </div>
+                        <div class="card card-accent">
+                            <h3 style="margin-bottom:1rem; font-size:1.2rem;">Our Approach</h3>
+                            <p style="color:#707070; margin-bottom:1.5rem; font-size:1rem; line-height:1.5;">We don't
+                                just verify static documents. We simulate structural enforcement risk.</p>
+                            <p class="grad-text"
+                                style="font-family:'Bodoni Moda', serif; font-size:1.6rem; font-weight:600; line-height:1.2;">
+                                We model future authority behavior.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 05 SOLUTION -->
+        <section class="slide" data-slide="4">
+            <div class="liquid-orb"></div>
+            <div class="float-shape fs2"></div>
+            <div class="slide-layout">
+                <div class="slide-header">
+                    <div class="label">04 // The Solution</div>
+                    <h2>LREIX Risk Engine</h2>
+                    <p class="subtitle mt-3">An AI-powered land survivability platform.</p>
+                </div>
+                <div class="slide-body">
+                    <div class="grid-3" style="margin-bottom: 2rem;">
+                        <div class="card">
+                            <div class="nbadge">01</div>
+                            <h3>Aggregates</h3>
+                            <p style="font-size:0.8rem; color:#707070; margin-top:0.4rem;">Public land, registration,
+                                zoning & court data</p>
+                        </div>
+                        <div class="card">
+                            <div class="nbadge">02</div>
+                            <h3>Normalizes</h3>
+                            <p style="font-size:0.8rem; color:#707070; margin-top:0.4rem;">Transforms raw data into
+                                structured legal risk signals</p>
+                        </div>
+                        <div class="card">
+                            <div class="nbadge">03</div>
+                            <h3>Detects</h3>
+                            <p style="font-size:0.8rem; color:#707070; margin-top:0.4rem;">Identifies authority-origin
+                                land (BDA/KIADB)</p>
+                        </div>
+                        <div class="card">
+                            <div class="nbadge">04</div>
+                            <h3>Applies</h3>
+                            <p style="font-size:0.8rem; color:#707070; margin-top:0.4rem;">Deep learning dispute
+                                prediction & escalation models</p>
+                        </div>
+                        <div class="card card-accent" style="grid-column:span 2;">
+                            <div class="nbadge">05</div>
+                            <h3>Outputs Resolution</h3>
+                            <p
+                                style="font-family:'Inter', sans-serif; font-size:1.1rem; font-weight:500; letter-spacing:0.1em; margin-top:0.8rem; color:#B89E5F;">
+                                PASS · ESCALATE · FAIL</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 06 ARCHITECTURE -->
+        <section class="slide" data-slide="5">
+            <div class="liquid-orb"></div>
+            <div class="float-shape fs1"></div>
+            <div class="slide-layout">
+                <div class="slide-header">
+                    <div class="label">05 // Product Architecture</div>
+                    <h2>End-to-End Pipeline</h2>
+                </div>
+                <div class="slide-body">
+                    <div class="pipeline" style="margin-bottom: 3rem;">
+                        <div class="pnode"><span class="plab">Input</span>Data Ingestion</div>
+                        <div class="parr">→</div>
+                        <div class="pnode">Legal Signal Norm.</div>
+                        <div class="parr">→</div>
+                        <div class="pnode core"><span class="plab" style="color:#B89E5F;">Core</span>Authority Risk
+                            Class.</div>
+                        <div class="parr">→</div>
+                        <div class="pnode">Dispute AI Model</div>
+                        <div class="parr">→</div>
+                        <div class="pnode">Decision Rules</div>
+                        <div class="parr">→</div>
+                        <div class="pnode"><span class="plab">Output</span>Enterprise API</div>
+                    </div>
+                    <div class="grid-4">
+                        <div class="card" style="padding:1.2rem; text-align:center;">
+                            <p
+                                style="font-family:'Cormorant Garamond', serif; font-size:0.6rem; color:#A0A09C; text-transform:uppercase; letter-spacing:0.15em; font-style:italic; margin-bottom:0.4rem;">
+                                Probability</p>
+                            <p style="font-size:0.85rem; font-weight:600; color:#404040;">Authority Dispute Probability
+                            </p>
+                        </div>
+                        <div class="card" style="padding:1.2rem; text-align:center;">
+                            <p
+                                style="font-family:'Cormorant Garamond', serif; font-size:0.6rem; color:#A0A09C; text-transform:uppercase; letter-spacing:0.15em; font-style:italic; margin-bottom:0.4rem;">
+                                Index</p>
+                            <p style="font-size:0.85rem; font-weight:600; color:#404040;">Cancellation Risk Index</p>
+                        </div>
+                        <div class="card card-accent" style="padding:1.2rem; text-align:center;">
+                            <p
+                                style="font-family:'Cormorant Garamond', serif; font-size:0.6rem; color:#B89E5F; text-transform:uppercase; letter-spacing:0.15em; font-style:italic; margin-bottom:0.4rem;">
+                                Key Metric</p>
+                            <p style="font-size:0.9rem; font-weight:600; color:#0F0F0F;">Survivability Score</p>
+                            <p style="font-size:0.65rem; color:#707070; margin-top:0.2rem;">(1Y / 3Y / 5Y)</p>
+                        </div>
+                        <div class="card" style="padding:1.2rem; text-align:center;">
+                            <p
+                                style="font-family:'Cormorant Garamond', serif; font-size:0.6rem; color:#A0A09C; text-transform:uppercase; letter-spacing:0.15em; font-style:italic; margin-bottom:0.4rem;">
+                                Trace</p>
+                            <p style="font-size:0.85rem; font-weight:600; color:#404040;">Explainability Trace</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 07 TARGET MARKET -->
+        <section class="slide" data-slide="6">
+            <div class="liquid-orb"></div>
+            <div class="float-shape fs2"></div>
+            <div class="slide-layout">
+                <div class="slide-header">
+                    <div class="label">06 // Target Market</div>
+                    <h2>Institutional Grade Focus</h2>
+                </div>
+                <div class="slide-body">
+                    <div class="grid-2" style="margin-bottom: 2.5rem;">
+                        <div class="card card-accent">
+                            <span class="chip"
+                                style="float:right; padding:0.2rem 0.6rem; font-size:0.55rem;">Primary</span>
+                            <h3 style="margin-bottom:1rem; font-size:1.2rem;">Direct Lenders</h3>
+                            <ul class="bullet">
+                                <li>Commercial Banks</li>
+                                <li>NBFCs (Non-Banking Financial Companies)</li>
+                                <li>Housing Finance Companies</li>
+                            </ul>
+                        </div>
+                        <div class="card">
+                            <span class="chip"
+                                style="float:right; padding:0.2rem 0.6rem; font-size:0.55rem; border-color:rgba(15,15,15,0.1); color:#707070; background:rgba(15,15,15,0.03);">Secondary</span>
+                            <h3 style="margin-bottom:1rem; font-size:1.2rem;">Investors & Funds</h3>
+                            <ul class="bullet">
+                                <li>Institutional investors & AIFs</li>
+                                <li>Large-scale land aggregators</li>
+                                <li>Infrastructure & Real Estate funds</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div style="text-align:center; padding: 2rem; border-top: 1px solid rgba(15,15,15,0.06);">
+                        <p style="font-family:'Bodoni Moda', serif; font-size:1.6rem; color:#404040;">India land-backed
+                            credit market: <span class="grad-text">Multi-trillion ₹ exposure</span></p>
+                        <p
+                            style="font-family:'Inter', sans-serif; font-size:0.75rem; color:#A0A09C; margin-top:0.8rem; letter-spacing:0.1em; text-transform:uppercase;">
+                            Entry: Karnataka <span style="margin:0 0.5rem;">→</span> Scale: Pan-India</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 08 BUSINESS MODEL -->
+        <section class="slide" data-slide="7">
+            <div class="liquid-orb"></div>
+            <div class="float-shape fs1"></div>
+            <div class="slide-layout">
+                <div class="slide-header">
+                    <div class="label">07 // Business Model</div>
+                    <h2>B2B SaaS + Infrastructure</h2>
+                    <p class="subtitle mt-2" style="color:#B89E5F;">We sell capital protection, not generic reports.</p>
+                </div>
+                <div class="slide-body">
+                    <div class="grid-2">
+                        <div class="card" style="display:flex; align-items:flex-start; gap:1rem;">
+                            <div class="nbadge" style="margin:0;">01</div>
+                            <div>
+                                <h3 style="margin-bottom:0.3rem;">Per-parcel Evaluation</h3>
+                                <p style="font-size:0.85rem; color:#707070; line-height:1.4;">Transaction-based revenue
+                                    per individual risk assessment.</p>
+                            </div>
+                        </div>
+                        <div class="card card-accent" style="display:flex; align-items:flex-start; gap:1rem;">
+                            <div class="nbadge" style="margin:0; background:rgba(184,158,95,0.15)">02</div>
+                            <div>
+                                <h3 style="margin-bottom:0.3rem;">Enterprise API Access</h3>
+                                <p style="font-size:0.85rem; color:#707070; line-height:1.4;">Recurring revenue
+                                    subscriptions for deep institutional integration.</p>
+                            </div>
+                        </div>
+                        <div class="card" style="display:flex; align-items:flex-start; gap:1rem;">
+                            <div class="nbadge" style="margin:0;">03</div>
+                            <div>
+                                <h3 style="margin-bottom:0.3rem;">Volume Tiers</h3>
+                                <p style="font-size:0.85rem; color:#707070; line-height:1.4;">Scaled pricing
+                                    architectures optimized for high-throughput lenders.</p>
+                            </div>
+                        </div>
+                        <div class="card" style="display:flex; align-items:flex-start; gap:1rem;">
+                            <div class="nbadge" style="margin:0;">04</div>
+                            <div>
+                                <h3 style="margin-bottom:0.3rem;">Custom Integrations</h3>
+                                <p style="font-size:0.85rem; color:#707070; line-height:1.4;">Tailored on-premise or
+                                    dedicated cloud deployments for major banks.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 09 COMPETITIVE -->
+        <section class="slide" data-slide="8">
+            <div class="liquid-orb"></div>
+            <div class="float-shape fs2"></div>
+            <div class="slide-layout">
+                <div class="slide-header">
+                    <div class="label">08 // Competitive Landscape</div>
+                    <h2>Optimizing for Enforceability</h2>
+                </div>
+                <div class="slide-body">
+                    <div class="card"
+                        style="padding:0; overflow:hidden; margin-bottom:2rem; border-color:rgba(15,15,15,0.1);">
+                        <table class="clean-table">
+                            <thead>
+                                <tr>
+                                    <th style="background:rgba(255,255,255,0.8);">Capability</th>
+                                    <th style="background:rgba(255,255,255,0.8);">Incumbents</th>
+                                    <th style="color:#B89E5F; background:rgba(184,158,95,0.05);">LREIX</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Document Retrieval</td>
+                                    <td>Landeed</td>
+                                    <td class="gold-text" style="background:rgba(184,158,95,0.02)">✓</td>
+                                </tr>
+                                <tr>
+                                    <td>Title Reports</td>
+                                    <td>TEAL / AITSR</td>
+                                    <td class="gold-text" style="background:rgba(184,158,95,0.02)">✓</td>
+                                </tr>
+                                <tr>
+                                    <td>Legal Services</td>
+                                    <td>Settlin</td>
+                                    <td class="gold-text" style="background:rgba(184,158,95,0.02)">✓</td>
+                                </tr>
+                                <tr class="hl">
+                                    <td style="font-weight:600; color:#0F0F0F;">Authority Survivability Modeling</td>
+                                    <td style="color:#A0A09C;">None</td>
+                                    <td style="font-weight:700; background:rgba(184,158,95,0.08);" class="gold-text">
+                                        Exclusive</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; align-items:center; padding: 0 1rem;">
+                        <p style="color:#707070; font-size:1.1rem; font-family:'Bodoni Moda', serif;">Others optimize
+                            for <span style="color:#0F0F0F; font-weight:600;">documentation</span>.</p>
+                        <p style="font-size:1.4rem; font-family:'Bodoni Moda', serif;">We optimize for <span
+                                class="grad-text" style="font-weight:600;">enforceability</span>.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 10 TRACTION -->
+        <section class="slide" data-slide="9">
+            <div class="liquid-orb"></div>
+            <div class="float-shape fs1"></div>
+            <div class="slide-layout">
+                <div class="slide-header">
+                    <div class="label">09 // Traction</div>
+                    <h2>Early Stage Progress</h2>
+                </div>
+                <div class="slide-body">
+                    <div class="grid-2">
+                        <div style="display:flex; flex-direction:column; gap:0.8rem;">
+                            <div class="card" style="border-left:3px solid #10b981; padding:1.2rem;">
+                                <h3 style="font-size:1rem;">Portal ingestion built</h3>
+                                <p style="font-size:0.75rem; color:#A0A09C; margin-top:0.3rem;">Bhoomi integration
+                                    complete</p>
+                            </div>
+                            <div class="card" style="border-left:3px solid #10b981; padding:1.2rem;">
+                                <h3 style="font-size:1rem;">Risk framework designed</h3>
+                                <p style="font-size:0.75rem; color:#A0A09C; margin-top:0.3rem;">LII + Authority Layer
+                                    mapped</p>
+                            </div>
+                            <div class="card"
+                                style="border-left:3px solid #B89E5F; padding:1.2rem; background:linear-gradient(90deg, rgba(184,158,95,0.05), transparent);">
+                                <h3 style="font-size:1rem;">Phase 1 architecture</h3>
+                                <p style="font-size:0.75rem; color:#A0A09C; margin-top:0.3rem;">Defined & scaling
+                                    locally</p>
+                            </div>
+                            <div class="card"
+                                style="border-left:3px solid #B89E5F; padding:1.2rem; background:linear-gradient(90deg, rgba(184,158,95,0.05), transparent);">
+                                <h3 style="font-size:1rem;">Bank-aligned logic</h3>
+                                <p style="font-size:0.75rem; color:#A0A09C; margin-top:0.3rem;">Decision pathways
+                                    structured</p>
+                            </div>
+                        </div>
+                        <div class="card card-accent"
+                            style="display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;">
+                            <p
+                                style="font-family:'Cormorant Garamond', serif; font-size:0.7rem; color:#A0A09C; margin-bottom:1.5rem; letter-spacing:0.2em; text-transform:uppercase; font-style:italic;">
+                                Current Go-To-Market Stage</p>
+                            <div
+                                style="font-family:'Bodoni Moda', serif; font-size:1.6rem; color:#404040; margin-bottom:1.5rem;">
+                                <span
+                                    style="color:#A0A09C; text-decoration:line-through; font-size:1.2rem;">Infrastructure
+                                    Build</span>
+                                <br><span
+                                    style="color:#A0A09C; font-size:1rem; margin:0.5rem 0; display:inline-block;">↓</span><br>
+                                <span class="grad-text" style="font-weight:600;">Pilot Institution Discussions</span>
+                            </div>
+                            <div style="width:100%; max-width:250px;">
+                                <div class="progress-track">
+                                    <div class="progress-fill" style="width:75%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 11 VISION -->
+        <section class="slide" data-slide="10">
+            <div class="ambient-bg"></div>
+            <div class="slide-layout" style="justify-content:center; align-items:center; text-align:center;">
+                <div class="label" style="margin-bottom:2rem;">10 // The Vision</div>
+                <div class="card card-accent"
+                    style="padding:4rem; border-radius:12px; max-width:800px; box-shadow:0 30px 60px rgba(0,0,0,0.08);">
+                    <p class="subtitle" style="margin-bottom:2rem;">As land systems digitize and unavoidably move toward
+                        blockchain architectures:</p>
+                    <h2 style="margin-bottom:2rem; line-height:1.4; font-size:clamp(1.8rem, 3vw, 2.5rem);">
+                        The missing layer will not be the records themselves.<br>
+                        <span class="grad-text">It will be their legal interpretation.</span>
+                    </h2>
+                    <div
+                        style="height:1px; background:linear-gradient(90deg, transparent, rgba(184,158,95,0.5), transparent); margin: 2rem 0;">
+                    </div>
+                    <p style="font-size:1.1rem; color:#707070; font-weight:400;">
+                        LREIX becomes the <span style="color:#0F0F0F; font-weight:600;">default land risk infrastructure
+                            layer</span> for institutional capital.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 12 ROADMAP -->
+        <section class="slide" data-slide="11">
+            <div class="liquid-orb"></div>
+            <div class="float-shape fs2"></div>
+            <div class="slide-layout">
+                <div class="slide-header">
+                    <div class="label">11 // Long-Term Expansion</div>
+                    <h2>4-Phase Execution Roadmap</h2>
+                </div>
+                <div class="slide-body">
+                    <div class="grid-4" style="margin-bottom: 2.5rem; height:200px;">
+                        <div class="card"
+                            style="border-bottom:3px solid #B89E5F; display:flex; flex-direction:column; justify-content:space-between;">
+                            <p
+                                style="font-family:'Bodoni Moda', serif; font-size:2rem; font-weight:600; color:rgba(184,158,95,0.15);">
+                                01</p>
+                            <h3 style="font-size:1.1rem; line-height:1.3;">Land survivability scoring engine</h3>
+                        </div>
+                        <div class="card"
+                            style="border-bottom:3px solid #D4AF37; display:flex; flex-direction:column; justify-content:space-between;">
+                            <p
+                                style="font-family:'Bodoni Moda', serif; font-size:2rem; font-weight:600; color:rgba(184,158,95,0.15);">
+                                02</p>
+                            <h3 style="font-size:1.1rem; line-height:1.3;">Escrow + mutation automation</h3>
+                        </div>
+                        <div class="card"
+                            style="border-bottom:3px solid #A0A09C; display:flex; flex-direction:column; justify-content:space-between;">
+                            <p
+                                style="font-family:'Bodoni Moda', serif; font-size:2rem; font-weight:600; color:rgba(15,15,15,0.05);">
+                                03</p>
+                            <h3 style="font-size:1.1rem; line-height:1.3;">Fractional asset risk certification</h3>
+                        </div>
+                        <div class="card"
+                            style="border-bottom:3px solid #A0A09C; display:flex; flex-direction:column; justify-content:space-between;">
+                            <p
+                                style="font-family:'Bodoni Moda', serif; font-size:2rem; font-weight:600; color:rgba(15,15,15,0.05);">
+                                04</p>
+                            <h3 style="font-size:1.1rem; line-height:1.3;">Cross-border land risk intelligence</h3>
+                        </div>
+                    </div>
+                    <div style="text-align:center;">
+                        <p
+                            style="font-family:'Inter', sans-serif; letter-spacing:0.2em; text-transform:uppercase; font-size:0.75rem;">
+                            <span style="color:#0F0F0F; font-weight:600;">India</span> <span
+                                style="color:#A0A09C; margin:0 0.5rem;">→</span>
+                            <span style="color:#0F0F0F; font-weight:600;">Emerging Markets</span> <span
+                                style="color:#A0A09C; margin:0 0.5rem;">→</span>
+                            <span class="gold-text" style="font-weight:600;">US Title Risk Layer</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 13 WHY WE WIN -->
+        <section class="slide" data-slide="12">
+            <div class="liquid-orb"></div>
+            <div class="float-shape fs1"></div>
+            <div class="slide-layout">
+                <div class="slide-header">
+                    <div class="label">12 // Why We Win</div>
+                    <h2>The Competitive Moat</h2>
+                </div>
+                <div class="slide-body">
+                    <div style="display:flex; flex-direction:column; gap:0.6rem; max-width:700px; margin: 0 auto;">
+                        <div class="card" style="display:flex; align-items:center; gap:1rem; padding:1rem 1.5rem;">
+                            <div class="nbadge" style="margin:0;">1</div><span
+                                style="font-size:1.05rem; font-weight:500;">Authority-first risk modeling
+                                paradigm</span>
+                        </div>
+                        <div class="card" style="display:flex; align-items:center; gap:1rem; padding:1rem 1.5rem;">
+                            <div class="nbadge" style="margin:0;">2</div><span
+                                style="font-size:1.05rem; font-weight:500;">Escalation-based legal decision logic</span>
+                        </div>
+                        <div class="card" style="display:flex; align-items:center; gap:1rem; padding:1rem 1.5rem;">
+                            <div class="nbadge" style="margin:0;">3</div><span
+                                style="font-size:1.05rem; font-weight:500;">Deterministic, explainable AI (no black-box
+                                scoring)</span>
+                        </div>
+                        <div class="card" style="display:flex; align-items:center; gap:1rem; padding:1rem 1.5rem;">
+                            <div class="nbadge" style="margin:0;">4</div><span
+                                style="font-size:1.05rem; font-weight:500;">Designed expressly for institutional credit
+                                committees</span>
+                        </div>
+                        <div class="card card-accent"
+                            style="display:flex; align-items:center; gap:1rem; padding:1rem 1.5rem;">
+                            <div class="nbadge" style="margin:0; background:rgba(184,158,95,0.15)">5</div>
+                            <span style="font-size:1.05rem; font-weight:600; color:#B89E5F;">Built solely at the
+                                intersection of Legal + AI + Infrastructure</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 14 THE ASK -->
+        <section class="slide" data-slide="13">
+            <div class="liquid-orb"></div>
+            <div class="float-shape fs2"></div>
+            <div class="slide-layout">
+                <div class="slide-header">
+                    <div class="label">13 // The Ask</div>
+                    <h2>Partner With Us</h2>
+                </div>
+                <div class="slide-body">
+                    <div class="card card-accent"
+                        style="border-radius:12px; padding:3rem; box-shadow:0 30px 60px rgba(0,0,0,0.06);">
+                        <div class="grid-2">
+                            <div style="padding-right:2rem; border-right:1px solid rgba(15,15,15,0.08);">
+                                <p
+                                    style="font-family:'Cormorant Garamond', serif; font-size:0.75rem; color:#A0A09C; margin-bottom:1rem; letter-spacing:0.2em; text-transform:uppercase; font-style:italic;">
+                                    Seeking Synergy In:</p>
+                                <ul class="bullet">
+                                    <li>Strategic banking & NBFC partnerships</li>
+                                    <li>Pilot credit institutions</li>
+                                    <li>Early-stage capital for core data infrastructure</li>
+                                    <li>Technical/Legal advisory board additions</li>
+                                </ul>
+                            </div>
+                            <div
+                                style="display:flex; flex-direction:column; justify-content:center; padding-left:1rem;">
+                                <p
+                                    style="font-family:'Bodoni Moda', serif; font-size:1.5rem; color:#404040; line-height:1.4; font-style:italic; margin-bottom:2rem;">
+                                    "We are building the future enforcement filter for land-backed finance."
+                                </p>
+                                <a href="mailto:hello@lreix.tech"
+                                    style="display:inline-block; padding: 1rem 2rem; background:#0F0F0F; color:#F0F0EB; text-decoration:none; font-family:'Inter', sans-serif; font-size:0.8rem; letter-spacing:0.15em; text-transform:uppercase; border-radius:4px; text-align:center; transition:background 0.3s;"
+                                    onmouseover="this.style.background='#B89E5F'"
+                                    onmouseout="this.style.background='#0F0F0F'">
+                                    Contact Us
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="text-align:center; margin-top:3rem;">
+                        <p
+                            style="font-family:'Inter', sans-serif; font-size:0.7rem; color:#A0A09C; letter-spacing:0.2em;">
+                            WWW.LREIX.TECH</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <script type="module">
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+        /* Hero 3D */
+        const canvas = document.getElementById('hero-canvas');
+        const scene = new THREE.Scene();
+        scene.fog = new THREE.FogExp2(0xF0F0EB, 0.015);
+        const camera = new THREE.PerspectiveCamera(45, innerWidth / innerHeight, 0.1, 100);
+        camera.position.set(0, 0, 8.5);
+        const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+        renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+        renderer.setSize(innerWidth, innerHeight);
+        renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        renderer.toneMappingExposure = 1.1;
+
+        const controls = new OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true; controls.dampingFactor = 0.03; controls.enableZoom = false;
+        controls.autoRotate = true; controls.autoRotateSpeed = 1.0;
+        controls.maxPolarAngle = Math.PI / 1.6; controls.minPolarAngle = Math.PI / 2.5;
+
+        scene.add(new THREE.AmbientLight(0xffffff, 0.7));
+        const spot = new THREE.SpotLight(0xffffff, 15); spot.position.set(5, 5, 5); spot.angle = 0.4; spot.penumbra = 0.5; scene.add(spot);
+        const fill = new THREE.PointLight(0xE6D5B8, 8); fill.position.set(-5, 0, 2); scene.add(fill);
+        const back = new THREE.DirectionalLight(0xd4eaff, 4); back.position.set(0, 5, -5); scene.add(back);
+
+        const hero = new THREE.Group(); scene.add(hero);
+        const glass = new THREE.MeshPhysicalMaterial({ color: 0xffffff, metalness: 0.1, roughness: 0.05, transmission: 0.95, thickness: 1.5, ior: 1.7, clearcoat: 1, clearcoatRoughness: 0.1 });
+        const gold = new THREE.MeshStandardMaterial({ color: 0xD4AF37, metalness: 1, roughness: 0.15 });
+
+        const torus = new THREE.Mesh(new THREE.TorusKnotGeometry(1.2, 0.25, 150, 20, 2, 3), glass);
+        hero.add(torus);
+        const r1 = new THREE.Mesh(new THREE.TorusGeometry(2.6, 0.015, 16, 100), gold); r1.rotation.x = Math.PI / 1.8; hero.add(r1);
+        const r2 = new THREE.Mesh(new THREE.TorusGeometry(2.6, 0.015, 16, 100), gold); r2.rotation.x = Math.PI / 2.2; r2.rotation.y = Math.PI / 4; r2.scale.setScalar(0.85); hero.add(r2);
+
+        for (let i = 0; i < 40; i++) {
+            const p = new THREE.Mesh(new THREE.IcosahedronGeometry(Math.random() * 0.04 + 0.02, 0), gold);
+            const t = Math.random() * Math.PI * 2, ph = Math.acos(Math.random() * 2 - 1), ra = 2 + Math.random() * 2.5;
+            p.position.set(ra * Math.sin(ph) * Math.cos(t), ra * Math.sin(ph) * Math.sin(t), ra * Math.cos(ph));
+            p.userData = { angle: t, radius: ra, speed: 0.003 + Math.random() * 0.008, yOff: Math.random() * Math.PI };
+            hero.add(p);
+        }
+
+        let mX = 0, mY = 0;
+        document.addEventListener('mousemove', e => { mX = (e.clientX - innerWidth / 2) * 0.0003; mY = (e.clientY - innerHeight / 2) * 0.0003; });
+        const clock = new THREE.Clock();
+
+        function animate() {
+            requestAnimationFrame(animate);
+            const t = clock.getElapsedTime();
+            controls.update();
+            hero.rotation.y += (mX - hero.rotation.y) * 0.05;
+            hero.rotation.x += (mY - hero.rotation.x) * 0.05;
+            torus.rotation.z = Math.sin(t * 0.2) * 0.1;
+            r1.rotation.z += 0.0015; r2.rotation.z -= 0.002;
+            hero.children.forEach(c => {
+                if (c.userData.speed) {
+                    c.userData.angle += c.userData.speed;
+                    c.position.x = c.userData.radius * Math.cos(c.userData.angle);
+                    c.position.z = c.userData.radius * Math.sin(c.userData.angle);
+                    c.position.y += Math.sin(t + c.userData.yOff) * 0.002;
+                    c.rotation.x += 0.02; c.rotation.y += 0.02;
+                }
+            });
+            renderer.render(scene, camera);
+        }
+        animate();
+        window.addEventListener('resize', () => { camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth, innerHeight); });
+    </script>
+
+    <script>
+        /* Custom Cursor */
+        const dot = document.querySelector('.cursor-dot'), circle = document.querySelector('.cursor-circle');
+        document.addEventListener('mousemove', e => {
+            dot.style.transform = `translate(${e.clientX}px, ${e.clientY}px) translate(-50%, -50%)`;
+            setTimeout(() => { circle.style.transform = `translate(${e.clientX}px, ${e.clientY}px) translate(-50%, -50%)`; }, 80);
+        });
+        document.querySelectorAll('a, button, .nav-dot, .card').forEach(el => {
+            el.addEventListener('mouseenter', () => circle.classList.add('hovered'));
+            el.addEventListener('mouseleave', () => circle.classList.remove('hovered'));
+        });
+
+        /* Presentation Deck Logic */
+        const deck = document.getElementById('deck');
+        const slides = document.querySelectorAll('.slide');
+        const dc = document.getElementById('navDots');
+        const indicator = document.getElementById('slide-indicator');
+
+        slides.forEach((_, i) => {
+            const d = document.createElement('button');
+            d.className = 'nav-dot' + (i === 0 ? ' active' : '');
+            d.setAttribute('aria-label', 'Slide ' + (i + 1));
+            d.onclick = () => slides[i].scrollIntoView({ behavior: 'smooth' });
+            dc.appendChild(d);
+        });
+        const dots = document.querySelectorAll('.nav-dot');
+        let cur = 0;
+
+        const obs = new IntersectionObserver(es => {
+            es.forEach(e => {
+                if (e.isIntersecting) {
+                    const i = +e.target.dataset.slide;
+                    dots.forEach((d, j) => d.classList.toggle('active', j === i));
+                    slides.forEach((s, j) => s.classList.toggle('active', j === i));
+                    if (indicator) indicator.textContent = `${(i + 1).toString().padStart(2, '0')} / ${slides.length}`;
+                    cur = i;
+                }
+            });
+        }, { root: deck, threshold: 0.5 });
+        slides.forEach(s => obs.observe(s));
+
+        document.addEventListener('keydown', e => {
+            if (['ArrowDown', 'ArrowRight', ' '].includes(e.key)) {
+                e.preventDefault();
+                cur = Math.min(cur + 1, slides.length - 1);
+                slides[cur].scrollIntoView({ behavior: 'smooth' });
+            }
+            if (['ArrowUp', 'ArrowLeft'].includes(e.key)) {
+                e.preventDefault();
+                cur = Math.max(cur - 1, 0);
+                slides[cur].scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    </script>
+
+    <svg style="position: absolute; width: 0; height: 0;" aria-hidden="true" focusable="false">
+        <filter id="liquid-filter">
+            <feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="3" seed="2" />
+            <feDisplacementMap in="SourceGraphic" scale="15" />
+        </filter>
+    </svg>
+
+</body>
+
+</html>
